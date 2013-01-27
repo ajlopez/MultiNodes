@@ -14,7 +14,6 @@ exports['Create Node and Get Empty Description'] = function (test) {
     test.ok(description);
     test.ok(description.id);
     test.ok(description.services);
-    test.ok(Array.isArray(description.services));
     test.equal(Object.keys(description.services).length, 0);
     
     test.done();
@@ -30,11 +29,10 @@ exports['Register Service'] = function (test) {
     test.ok(description);
     test.ok(description.id);
     test.ok(description.services);
-    test.ok(Array.isArray(description.services));
     test.equal(Object.keys(description.services).length, 1);
-    test.ok(description.services['myservice']);
+    test.ok(description.services.myservice);
     
-    var servdesc = description.services['myservice'];
+    var servdesc = description.services.myservice;
     
     test.equal(servdesc.name, 'myservice');
     test.equal(servdesc.service, myservice);    
@@ -55,11 +53,10 @@ exports['Register Service with Explicit Description'] = function (test) {
     test.ok(description);
     test.ok(description.id);
     test.ok(description.services);
-    test.ok(Array.isArray(description.services));
     test.equal(Object.keys(description.services).length, 1);
-    test.ok(description.services['myservice']);
+    test.ok(description.services.myservice);
     
-    var servdesc = description.services['myservice'];
+    var servdesc = description.services.myservice;
     
     test.equal(servdesc.name, 'myservice');
     test.equal(servdesc.service, myservice);    
@@ -86,11 +83,10 @@ exports['Register Service with Get Description'] = function (test) {
     test.ok(description);
     test.ok(description.id);
     test.ok(description.services);
-    test.ok(Array.isArray(description.services));
     test.equal(Object.keys(description.services).length, 1);
-    test.ok(description.services['myservice']);
+    test.ok(description.services.myservice);
     
-    var servdesc = description.services['myservice'];
+    var servdesc = description.services.myservice;
     
     test.equal(servdesc.name, 'myservice');
     test.equal(servdesc.service, myservice);    
