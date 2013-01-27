@@ -78,6 +78,7 @@ exports['Register Service with Get Description'] = function (test) {
             return { counter: 10 };
         }
     };
+
     node.registerService('myservice', myservice);
 
     var description = node.getDescription();
@@ -100,6 +101,3 @@ exports['Register Service with Get Description'] = function (test) {
     
     test.done();
 };
-
-
-
