@@ -58,6 +58,8 @@ exports['Get Nodes with Service'] = function (test) {
     
     node2.registerService('service1');
     node3.registerService('service2');
+
+    var desc = node2.getDescription();
     
     node2.connect(node);
     node3.connect(node);
@@ -66,9 +68,7 @@ exports['Get Nodes with Service'] = function (test) {
     
     test.ok(nodes);
     test.equal(nodes.length, 1);
-    
-    var desc = node2.getDescription();
-    
+
     var nodeinfo = nodes[0];
     
     test.ok(nodeinfo);
@@ -88,6 +88,8 @@ exports['Get Nodes with Service and Filter'] = function (test) {
     node2.registerService('service1', { }, { counter: 10 });
     node3.registerService('service1', { }, { counter: 20 });
     
+    var desc = node2.getDescription();
+    
     node2.connect(node);
     node3.connect(node);
     
@@ -95,8 +97,6 @@ exports['Get Nodes with Service and Filter'] = function (test) {
     
     test.ok(nodes);
     test.equal(nodes.length, 1);
-    
-    var desc = node2.getDescription();
     
     var nodeinfo = nodes[0];
     
