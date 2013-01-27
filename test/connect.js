@@ -65,11 +65,11 @@ exports['Get Nodes with Service'] = function (test) {
     var nodes = node.getNodes('service1');
     
     test.ok(nodes);
-    test.equal(Object.keys(nodes).length, 1);
+    test.equal(nodes.length, 1);
     
     var desc = node2.getDescription();
     
-    var nodeinfo = nodes[desc.id];
+    var nodeinfo = nodes[0];
     
     test.ok(nodeinfo);
     test.equal(nodeinfo.id, desc.id);
@@ -94,11 +94,11 @@ exports['Get Nodes with Service and Filter'] = function (test) {
     var nodes = node.getNodes('service1', function (desc) { return desc.counter == 10; });
     
     test.ok(nodes);
-    test.equal(Object.keys(nodes).length, 1);
+    test.equal(nodes.length, 1);
     
     var desc = node2.getDescription();
     
-    var nodeinfo = nodes[desc.id];
+    var nodeinfo = nodes[0];
     
     test.ok(nodeinfo);
     test.equal(nodeinfo.id, desc.id);
