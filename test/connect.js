@@ -26,3 +26,25 @@ exports['Connect to Node'] = function (test) {
     
     node.connect(node2);
 };
+
+exports['Connect and Get Nodes'] = function (test) {
+    var nmsg = 0;
+    var node = mnode.createNode();
+    var node2 = mnode.createNode();
+    
+    node.connect(node2);
+    
+    var nodes = node.getNodes();
+    
+    test.ok(nodes);
+    test.equal(Object.keys(nodes).length, 1);
+    
+    var desc = node2.getDescription();
+    
+    var nodeinfo = nodes[desc.id];
+    
+    test.ok(nodeinfo);
+    test.equal(nodeinfo.id, desc.id);
+    
+    test.done();
+};
