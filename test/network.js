@@ -14,9 +14,11 @@ exports['Send Message to Connected Node'] = function (test) {
     node.registerService('service1', new Service(test, 1, result, done));
     node2.registerService('service2', new Service(test, 2, result, done));
     
-    node.listen(3000);
-    node2.connect(3000, function (client) {
+    node.listen(3000, function () {
         node.process({ service: 'service2', message: 2 });
+    });
+    
+    node2.connect(3000, function () {
         node2.process({ service: 'service1', message: 1 });
     });
         
