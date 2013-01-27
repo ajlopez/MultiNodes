@@ -35,7 +35,6 @@ exports['Register Service'] = function (test) {
     var servdesc = description.services.myservice;
     
     test.equal(servdesc.name, 'myservice');
-    test.equal(servdesc.service, myservice);    
     test.ok(servdesc.description);
     test.equal(typeof servdesc.description, 'object');
     test.equal(Object.keys(servdesc.description).length, 0);
@@ -59,7 +58,6 @@ exports['Register Service with Explicit Description'] = function (test) {
     var servdesc = description.services.myservice;
     
     test.equal(servdesc.name, 'myservice');
-    test.equal(servdesc.service, myservice);    
     test.ok(servdesc.description);
     test.equal(typeof servdesc.description, 'object');
     test.equal(Object.keys(servdesc.description).length, 1);
@@ -89,7 +87,6 @@ exports['Register Service with Get Description'] = function (test) {
     var servdesc = description.services.myservice;
     
     test.equal(servdesc.name, 'myservice');
-    test.equal(servdesc.service, myservice);    
     test.ok(servdesc.description);
     test.equal(typeof servdesc.description, 'object');
     test.equal(Object.keys(servdesc.description).length, 1);

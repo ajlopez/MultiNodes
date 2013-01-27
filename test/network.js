@@ -2,7 +2,7 @@
 var mnode = require('..');
 
 exports['Send Message to Connected Node'] = function (test) {
-    test.expect(10);
+    test.expect(13);
     
     var nmsg = 0;
 
@@ -26,6 +26,10 @@ exports['Send Message to Connected Node'] = function (test) {
         test.equal(msg.id, node.getDescription().id);
         test.ok(msg.services);
         test.ok(msg.services.service1);
+        
+        test.ok(msg.server);
+        test.equal(msg.server.host, 'localhost');
+        test.equal(msg.server.port, 3000);
 
         node2.process({ service: 'service1', message: 1 });
     });
