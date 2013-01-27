@@ -1,7 +1,7 @@
 { "name": "multinodes"
 , "description": "Running many logical nodes in different machines. Each logical node can host services, and interchange messages."
 , "keywords": [ "node.js", "distributed", "application", "application" ]
-, "version": "0.0.1alpha"
+, "version": "0.0.1"
 , "author": "Angel 'Java' Lopez <webmaster@ajlopez.com> (http://www.ajlopez.com)"
 , "repository": { "type": "git", "url": "git://github.com/ajlopez/MultiNodes.git" }
 , "main": "./lib/multinodes.js"

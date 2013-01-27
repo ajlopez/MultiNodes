@@ -47,7 +47,48 @@ Reference in your program:
 var multinodes = require('multinodes');
 ```
 
-TBD
+Create a node:
+```js
+var node = multinodes.createNode();
+```
+Register a service with a description:
+```js
+node.registerService(name, service, description);
+```
+`service` should have a `process(msg)` function to receive messages.
+
+Get node description:
+```js
+var description = node.getDescription();
+```
+It includes the registered services, the published server (if any), and the known remote nodes.
+
+Publish a node as a server:
+```js
+node.listen(port, host, function(client, msg) {
+	// It receives each connected client and its description msg
+});
+```
+
+Connect a node to a published server node:
+```js
+node.connect(port, host, function(server, msg) {
+	// It receives the server and its description msg
+});
+```
+
+Send a message to a service:
+```js
+node.process({ service: name, message: message });
+```
+
+Stops a node:
+```js
+node.stop();
+```
+
+See [network test](https://github.com/ajlopez/MultiNodes/blob/master/test/network.js).
+
 ## Development
 
 ```
@@ -64,6 +105,11 @@ TBD
 ## To do
 
 - Samples
+- Improve README.md
+
+## Versions
+
+- 0.0.1: Published.
 
 ## Contribution
 
