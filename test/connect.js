@@ -107,3 +107,31 @@ exports['Get Nodes with Service and Filter'] = function (test) {
     
     test.done();
 };
+
+exports['Send Message to Connected Node'] = function (test) {
+    var nmsg = 0;
+
+    var node = mnode.createNode();
+    var node2 = mnode.createNode();
+    
+    var result = { sum: 0, total: 3 };
+    
+    node.registerService('service1', new Service(test, 1, result));
+    node2.registerService('service2', new Service(test, 2, result));
+        
+    node2.connect(node);
+    
+    node.process({ service: 'service2', message: 2 });
+    node2.process({ service: 'service1', message: 1 });
+};
+
+function Service(test, message, result) {
+    this.process = function (msg) {
+        test.ok(msg);
+        test.equal(msg, message);
+        result.sum += msg;
+        
+        if (result.sum == result.total)
+            test.done();
+    };
+}
