@@ -74,10 +74,23 @@ exports['Call Application Method'] = function (test) {
     node.callApplication('myapplication', 'method', ['foo']);
 };
 
+exports['Tell to Application'] = function (test) {
+    var node = mnode.createNode();
+    node.registerApplication('myapplication', new Application(test, 'foo'));
+
+    node.tellToApplication('myapplication', 'foo');
+};
+
 function Application(test, expected) {
     this.method = function (arg) {
         test.ok(arg);
         test.equal(arg, expected);
+        test.done();
+    }
+
+    this.process = function (msg) {
+        test.ok(msg);
+        test.equal(msg, expected);
         test.done();
     }
 }

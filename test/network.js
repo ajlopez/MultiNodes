@@ -40,6 +40,45 @@ exports['Send Message to Remote Node'] = function (test) {
     }
 };
 
+exports['Tell Message to Application at Remote Node'] = function (test) {
+    test.expect(11);
+    
+    var nmsg = 0;
+
+    var node = mnode.createNode(3000);
+
+    test.equal(node.name, 'localhost:3000');
+    
+    var node2 = mnode.createNode();
+    
+    var result = { sum: 0, total: 3 };
+    
+    node.registerApplication('application1', new Application(test, 1, result, done));
+    node2.registerApplication('application2', new Application(test, 2, result, done));
+    
+    node.start(function (client, msg) {
+        test.equal(msg.name, node2.getDescription().name);
+        test.ok(msg.applications);
+        test.ok(msg.applications.application2);
+
+        node.tellToApplication('application2', 2);
+    });
+    
+    node2.connect(3000, function (server, msg) {
+        test.equal(msg.name, node.name);
+        test.ok(msg.applications);
+        test.ok(msg.applications.application1);
+        
+        node2.tellToApplication('application1', 1);
+    });
+        
+    function done() {
+        test.done();
+        node.stop();
+        node2.stop();
+    }
+};
+
 exports['Call Application in Remote Node'] = function (test) {
     test.expect(3);
     
