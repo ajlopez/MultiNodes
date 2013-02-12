@@ -2,36 +2,35 @@
 var mnode = require('..');
 
 exports['Send Message to Connected Node'] = function (test) {
-    test.expect(13);
+    test.expect(11);
     
     var nmsg = 0;
 
-    var node = mnode.createNode();
+    var node = mnode.createNode(3000);
+
+    test.equal(node.name, 'localhost:3000');
+    
     var node2 = mnode.createNode();
     
     var result = { sum: 0, total: 3 };
     
-    node.registerService('service1', new Service(test, 1, result, done));
-    node2.registerService('service2', new Service(test, 2, result, done));
+    node.registerApplication('application1', new Application(test, 1, result, done));
+    node2.registerApplication('application2', new Application(test, 2, result, done));
     
-    node.listen(3000, function (client, msg) {
-        test.equal(msg.id, node2.getDescription().id);
-        test.ok(msg.services);
-        test.ok(msg.services.service2);
+    node.start(function (client, msg) {
+        test.equal(msg.name, node2.getDescription().name);
+        test.ok(msg.applications);
+        test.ok(msg.applications.application2);
 
-        node.process({ service: 'service2', message: 2 });
+        node.process({ application: 'application2', message: 2 });
     });
     
     node2.connect(3000, function (server, msg) {
-        test.equal(msg.id, node.getDescription().id);
-        test.ok(msg.services);
-        test.ok(msg.services.service1);
+        test.equal(msg.name, node.name);
+        test.ok(msg.applications);
+        test.ok(msg.applications.application1);
         
-        test.ok(msg.server);
-        test.equal(msg.server.host, 'localhost');
-        test.equal(msg.server.port, 3000);
-
-        node2.process({ service: 'service1', message: 1 });
+        node2.process({ application: 'application1', message: 1 });
     });
         
     function done() {
@@ -42,64 +41,60 @@ exports['Send Message to Connected Node'] = function (test) {
 };
 
 exports['Send Message to Connected Nodes'] = function (test) {
-    test.expect(25);
+    test.expect(22);
     
     var nmsg = 0;
 
-    var node = mnode.createNode();
-    var node2 = mnode.createNode();
+    var node = mnode.createNode(3000);
+    var node2 = mnode.createNode(3001);
     var node3 = mnode.createNode();
     
     var result = { sum: 0, total: 6 };
     
-    node.registerService('service1', new Service(test, 1, result, done));
-    node2.registerService('service2', new Service(test, 2, result, done));
-    node3.registerService('service3', new Service(test, 3, result, done));
+    node.registerApplication('application1', new Application(test, 1, result, done));
+    node2.registerApplication('application2', new Application(test, 2, result, done));
+    node3.registerApplication('application3', new Application(test, 3, result, done));
     
     var processed = 0;
     
-    node.listen(3000, function (client, msg) {
+    node.start(function (client, msg) {
         if (processed) {
-            test.equal(msg.id, node3.getDescription().id);
-            test.ok(msg.services);
-            test.ok(msg.services.service3);
+            test.equal(msg.name, node3.name);
+            test.ok(msg.applications);
+            test.ok(msg.applications.application3);
         }
         else {
-            test.equal(msg.id, node2.getDescription().id);
-            test.ok(msg.services);
-            test.ok(msg.services.service2);
+            test.equal(msg.name, node2.name);
+            test.ok(msg.applications);
+            test.ok(msg.applications.application2);
         }
 
         if (processed)
             return;
             
-        node.process({ service: 'service2', message: 2 });
+        node.process({ application: 'application2', message: 2 });
         processed++;
     });
     
-    node2.listen(3001, function (client, msg) {
+    node2.start(function (client, msg) {
         test.equal(msg.id, node3.getDescription().id);
-        test.ok(msg.services);
-        test.ok(msg.services.service3);
+        test.ok(msg.applications);
+        test.ok(msg.applications.application3);
         
-        node.process({ service: 'service3', message: 3 });
+        node.process({ application: 'application3', message: 3 });
     });
     
     node2.connect(3000, function (server, msg) {
-        test.equal(msg.id, node.getDescription().id);
-        test.ok(msg.services);
-        test.ok(msg.services.service1);
+        test.equal(msg.name, node.name);
+        test.ok(msg.applications);
+        test.ok(msg.applications.application1);
         
-        test.ok(msg.server);
-        test.equal(msg.server.host, 'localhost');
-        test.equal(msg.server.port, 3000);
-
-        node2.process({ service: 'service1', message: 1 });
+        node2.process({ application: 'application1', message: 1 });
         
         node3.connect(3000, function (server, msg) {
-            test.equal(msg.id, node.getDescription().id);
-            test.ok(msg.services);
-            test.ok(msg.services.service1);
+            test.equal(msg.name, node.name);
+            test.ok(msg.applications);
+            test.ok(msg.applications.application1);
             test.ok(msg.nodes);
         });
     });
@@ -112,7 +107,7 @@ exports['Send Message to Connected Nodes'] = function (test) {
     }
 };
 
-function Service(test, message, result, done) {
+function Application(test, message, result, done) {
     this.process = function (msg) {
         test.ok(msg);
         test.equal(msg, message);
