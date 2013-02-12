@@ -97,7 +97,29 @@ exports['Send Message to Connected Node'] = function (test) {
     node2.process({ application: 'application1', message: 1 });
 };
 
+exports['Call Application in Connected Node'] = function (test) {
+    var nmsg = 0;
+
+    var node = mnode.createNode();
+    var node2 = mnode.createNode();
+    
+    var result = { sum: 0, total: 3 };
+    
+    node.registerApplication('application1', new Application(test, 1, result));
+    node2.registerApplication('application2', new Application(test, 2, result));
+        
+    node2.connect(node);
+    
+    node2.callApplication('application1', 'method', [1]);
+};
+
 function Application(test, message, result) {
+    this.method = function (arg) {
+        test.ok(arg);
+        test.equal(arg, message);
+        test.done();        
+    }
+
     this.process = function (msg) {
         test.ok(msg);
         test.equal(msg, message);
