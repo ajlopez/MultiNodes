@@ -51,24 +51,35 @@ Create a node:
 ```js
 var node = multinodes.createNode();
 ```
-Register a service with a description:
+It creates a node with a random name.
+
 ```js
-node.registerService(name, service, description);
+var node = multinodes.createNode(name);
 ```
-`service` should have a `process(msg)` function to receive messages.
+It creates a node with the given name.
+
+```js
+var node = multinodes.createNode(port[, host]);
+// a server starts listen on port
+node.start(function(stream, msg) {
+	// For each connected client
+	// it will receive a bidirectional object stream, 
+	// and the description of remote node
+});
+```
+
+Register an application with a description:
+```js
+node.registerApplication(name, application, description);
+```
+`application` should be an object with a `process(msg)` function to receive messages. `description` is an optional
+object that has application-dependent information.
 
 Get node description:
 ```js
 var description = node.getDescription();
 ```
-It includes the registered services, the published server (if any), and the known remote nodes.
-
-Publish a node as a server:
-```js
-node.listen(port, host, function(client, msg) {
-	// It receives each connected client and its description msg
-});
-```
+It includes the node name, the registered applications, and the names of the known remote nodes.
 
 Connect a node to a published server node:
 ```js
@@ -77,14 +88,40 @@ node.connect(port, host, function(server, msg) {
 });
 ```
 
-Send a message to a service:
+Send a message to a node:
 ```js
-node.process({ service: name, message: message });
+node.process(msg);
 ```
+Examples:
+```js
+// Send a message to an application, to be processed as app.process(msg)
+node.process({ application: 'webcrawler', message: { link: 'http://ajlopez.wordpress.com' }});
+// Send a call to an application, to be processed as app.[action](args...)
+node.process({ application: 'webcrawler', action: 'methodname', args: [1, 2] });
+```
+Usually, instead of `node.process` you can use the following methods:
+
+Send a message to app.process(msg)
+```js
+node.tellToApplication(appname, msg);
+```
+
+Call a method (action) in application as app.[action](args...). 
+```js
+node.callApplication(appname, actionname, args);
+```
+`args` is an array.
 
 Stops a node:
 ```js
 node.stop();
+```
+
+Connect to a remote node:
+```js
+node.connect(port, [host], function (stream, msg) {
+	// It receives a bidirectional object stream, and the description of remote node
+});
 ```
 
 See [network test](https://github.com/ajlopez/MultiNodes/blob/master/test/network.js).
