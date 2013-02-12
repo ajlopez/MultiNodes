@@ -23,29 +23,6 @@ exports['Connect to Node'] = function (test) {
     test.done();
 };
 
-exports['Connect and Get Nodes'] = function (test) {
-    var nmsg = 0;
-    var node = mnode.createNode();
-    var node2 = mnode.createNode();
-    
-    node.connect(node2);
-    
-    var nodes = node.getNodes();
-    
-    test.ok(nodes);
-    test.equal(Object.keys(nodes).length, 1);
-    
-    var desc = node2.getDescription();
-    
-    var nodeinfo = nodes[desc.name];
-    
-    test.ok(nodeinfo);
-    test.equal(nodeinfo.name, desc.name);
-    test.ok(nodeinfo.info);
-    
-    test.done();
-};
-
 exports['Get Nodes with Application'] = function (test) {
     var nmsg = 0;
     var node = mnode.createNode();
@@ -60,7 +37,7 @@ exports['Get Nodes with Application'] = function (test) {
     node2.connect(node);
     node3.connect(node);
 
-    var nodes = node.getNodes('application1');
+    var nodes = node.getApplicationNodes('application1');
 
     test.ok(nodes);
     test.equal(nodes.length, 1);
@@ -68,9 +45,7 @@ exports['Get Nodes with Application'] = function (test) {
     var nodeinfo = nodes[0];
 
     test.ok(nodeinfo);
-    test.equal(nodeinfo.id, desc.id);
-    test.ok(nodeinfo.info);
-    test.deepEqual(nodeinfo.info, desc);
+    test.equal(nodeinfo.name, desc.name);
 
     test.done();
 };
@@ -89,7 +64,7 @@ exports['Get Nodes with Application and Filter'] = function (test) {
     node2.connect(node);
     node3.connect(node);
     
-    var nodes = node.getNodes('application1', function (desc) { return desc.counter == 10; });
+    var nodes = node.getApplicationNodes('application1', function (desc) { return desc.counter == 10; });
     
     test.ok(nodes);
     test.equal(nodes.length, 1);
@@ -98,8 +73,8 @@ exports['Get Nodes with Application and Filter'] = function (test) {
     
     test.ok(nodeinfo);
     test.equal(nodeinfo.name, desc.name);
-    test.ok(nodeinfo.info);
-    test.deepEqual(nodeinfo.info, desc);
+    test.ok(nodeinfo.description);
+    test.deepEqual(nodeinfo.description, { counter: 10 });
     
     test.done();
 };
