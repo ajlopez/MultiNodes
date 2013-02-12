@@ -1,7 +1,7 @@
 
 var mnode = require('..');
 
-exports['Send Message to Connected Node'] = function (test) {
+exports['Send Message to Remote Node'] = function (test) {
     test.expect(11);
     
     var nmsg = 0;
@@ -40,7 +40,36 @@ exports['Send Message to Connected Node'] = function (test) {
     }
 };
 
-exports['Send Message to Connected Nodes'] = function (test) {
+exports['Call Application in Remote Node'] = function (test) {
+    test.expect(3);
+    
+    var nmsg = 0;
+
+    var node = mnode.createNode(3000);
+
+    test.equal(node.name, 'localhost:3000');
+    
+    var node2 = mnode.createNode();
+    
+    var result = { sum: 0, total: 3 };
+    
+    node.registerApplication('application1', new Application(test, 1, result, done));
+    node2.registerApplication('application2', new Application(test, 2, result, done));
+    
+    node.start();
+    
+    node2.connect(3000, function (server, msg) {
+        node2.callApplication('application1', 'method', [1]);
+    });
+        
+    function done() {
+        test.done();
+        node.stop();
+        node2.stop();
+    }
+};
+
+exports['Send Message to Remote Nodes'] = function (test) {
     test.expect(22);
     
     var nmsg = 0;
@@ -108,6 +137,12 @@ exports['Send Message to Connected Nodes'] = function (test) {
 };
 
 function Application(test, message, result, done) {
+    this.method = function (arg) {
+        test.ok(arg);
+        test.equal(arg, message);
+        done();
+    };
+    
     this.process = function (msg) {
         test.ok(msg);
         test.equal(msg, message);
