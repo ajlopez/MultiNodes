@@ -4,27 +4,23 @@ var mnode = require('..');
 exports['Connect to Node'] = function (test) {
     var nmsg = 0;
     var node = mnode.createNode();
-    var description = node.getDescription();
     var node2 = mnode.createNode();
-    var description2 = node2.getDescription();
-    
-    node.on('data', function (msg) {
-        test.equal(msg.name, description2.name);
-        nmsg++;
-        
-        if (nmsg == 2)
-            test.done();
-    });
-    
-    node2.on('data', function (msg) {
-        test.equal(msg.name, description.name);
-        nmsg++;
-        
-        if (nmsg == 2)
-            test.done();
-    });
     
     node.connect(node2);
+    
+    var description = node.getDescription();
+    
+    test.equal(description.name, node.name);
+    test.equal(description.nodes.length, 1);
+    test.equal(description.nodes[0], node2.name);
+    
+    var description2 = node2.getDescription();
+    
+    test.equal(description2.name, node2.name);
+    test.equal(description2.nodes.length, 1);
+    test.equal(description2.nodes[0], node.name);
+    
+    test.done();
 };
 
 exports['Connect and Get Nodes'] = function (test) {
