@@ -32,8 +32,6 @@ exports['Get Nodes with Application'] = function (test) {
     node2.registerApplication('application1');
     node3.registerApplication('application2');
 
-    var desc = node2.getDescription();
-
     node2.connect(node);
     node3.connect(node);
 
@@ -45,7 +43,9 @@ exports['Get Nodes with Application'] = function (test) {
     var nodeinfo = nodes[0];
 
     test.ok(nodeinfo);
-    test.equal(nodeinfo.name, desc.name);
+    test.equal(nodeinfo.name, node2.name);
+    test.ok(nodeinfo.node);
+    test.ok(nodeinfo.node === node2);
 
     test.done();
 };
@@ -55,27 +55,28 @@ exports['Get Nodes with Application and Filter'] = function (test) {
     var node = mnode.createNode();
     var node2 = mnode.createNode();
     var node3 = mnode.createNode();
-    
+
     node2.registerApplication('application1', { }, { counter: 10 });
     node3.registerApplication('application1', { }, { counter: 20 });
-    
+
     var desc = node2.getDescription();
-    
+
     node2.connect(node);
     node3.connect(node);
-    
+
     var nodes = node.getApplicationNodes('application1', function (desc) { return desc.counter == 10; });
-    
+
     test.ok(nodes);
     test.equal(nodes.length, 1);
-    
+
     var nodeinfo = nodes[0];
-    
+
     test.ok(nodeinfo);
     test.equal(nodeinfo.name, desc.name);
+    test.ok(nodeinfo.node);
     test.ok(nodeinfo.description);
     test.deepEqual(nodeinfo.description, { counter: 10 });
-    
+
     test.done();
 };
 

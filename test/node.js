@@ -67,3 +67,17 @@ exports['Register Application with Description'] = function (test) {
     test.done();
 };
 
+exports['Call Application Method'] = function (test) {
+    var node = mnode.createNode();
+    node.registerApplication('myapplication', new Application(test, 'foo'));
+
+    node.callApplication('myapplication', 'method', ['foo']);
+};
+
+function Application(test, expected) {
+    this.method = function (arg) {
+        test.ok(arg);
+        test.equal(arg, expected);
+        test.done();
+    }
+}
