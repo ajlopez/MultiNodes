@@ -60,10 +60,9 @@ It creates a node with the given name.
 ```js
 var node = multinodes.createNode(port[, host]);
 // a server starts listen on port
-node.start(function(stream, msg) {
+node.start(function(msg) {
 	// For each connected client
-	// it will receive a bidirectional object stream, 
-	// and the description of remote node
+	// it will receive the description of remote node
 });
 ```
 
@@ -82,10 +81,12 @@ It includes the node name, the registered applications, and the names of the kno
 
 Connect a node to a published server node:
 ```js
-node.connect(port, host, function(server, msg) {
-	// It receives the server and its description msg
+node.connect(port, host, function(msg) {
+	// It receives the remote node description msg
+    // with its name, known nodes and application descriptions
 });
 ```
+See [network test](https://github.com/ajlopez/MultiNodes/blob/master/test/network.js).
 
 Send a message to a node:
 ```js
@@ -115,15 +116,6 @@ Stops a node:
 ```js
 node.stop();
 ```
-
-Connect to a remote node:
-```js
-node.connect(port, [host], function (stream, msg) {
-	// It receives a bidirectional object stream, and the description of remote node
-});
-```
-
-See [network test](https://github.com/ajlopez/MultiNodes/blob/master/test/network.js).
 
 ## Development
 

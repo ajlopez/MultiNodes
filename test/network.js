@@ -17,7 +17,7 @@ exports['Send Message to Remote Node'] = function (test) {
     node.registerApplication('application1', new Application(test, 1, result, done));
     node2.registerApplication('application2', new Application(test, 2, result, done));
     
-    node.start(function (client, msg) {
+    node.start(function (msg) {
         test.equal(msg.name, node2.getDescription().name);
         test.ok(msg.applications);
         test.ok(msg.applications.application2);
@@ -25,7 +25,7 @@ exports['Send Message to Remote Node'] = function (test) {
         node.process({ application: 'application2', message: 2 });
     });
     
-    node2.connect(3000, function (server, msg) {
+    node2.connect(3000, function (msg) {
         test.equal(msg.name, node.name);
         test.ok(msg.applications);
         test.ok(msg.applications.application1);
@@ -56,7 +56,7 @@ exports['Tell Message to Application at Remote Node'] = function (test) {
     node.registerApplication('application1', new Application(test, 1, result, done));
     node2.registerApplication('application2', new Application(test, 2, result, done));
     
-    node.start(function (client, msg) {
+    node.start(function (msg) {
         test.equal(msg.name, node2.getDescription().name);
         test.ok(msg.applications);
         test.ok(msg.applications.application2);
@@ -64,7 +64,7 @@ exports['Tell Message to Application at Remote Node'] = function (test) {
         node.tellToApplication('application2', 2);
     });
     
-    node2.connect(3000, function (server, msg) {
+    node2.connect(3000, function (msg) {
         test.equal(msg.name, node.name);
         test.ok(msg.applications);
         test.ok(msg.applications.application1);
@@ -125,7 +125,7 @@ exports['Send Message to Remote Nodes'] = function (test) {
     
     var processed = 0;
     
-    node.start(function (client, msg) {
+    node.start(function (msg) {
         if (processed) {
             test.equal(msg.name, node3.name);
             test.ok(msg.applications);
@@ -144,7 +144,7 @@ exports['Send Message to Remote Nodes'] = function (test) {
         processed++;
     });
     
-    node2.start(function (client, msg) {
+    node2.start(function (msg) {
         test.equal(msg.id, node3.getDescription().id);
         test.ok(msg.applications);
         test.ok(msg.applications.application3);
@@ -152,14 +152,14 @@ exports['Send Message to Remote Nodes'] = function (test) {
         node.process({ application: 'application3', message: 3 });
     });
     
-    node2.connect(3000, function (server, msg) {
+    node2.connect(3000, function (msg) {
         test.equal(msg.name, node.name);
         test.ok(msg.applications);
         test.ok(msg.applications.application1);
         
         node2.process({ application: 'application1', message: 1 });
         
-        node3.connect(3000, function (server, msg) {
+        node3.connect(3000, function (msg) {
             test.equal(msg.name, node.name);
             test.ok(msg.applications);
             test.ok(msg.applications.application1);
