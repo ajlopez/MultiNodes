@@ -81,6 +81,15 @@ exports['Tell to Application'] = function (test) {
     node.tellToApplication('myapplication', 'foo');
 };
 
+exports['Run in Local Node'] = function (test) {
+    var node = mnode.createNode();
+    node.runInNode(function () {
+        test.ok(this);
+        test.equal(this, node);
+        test.done();
+    });
+};
+
 function Application(test, expected) {
     this.method = function (arg) {
         test.ok(arg);
