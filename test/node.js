@@ -90,6 +90,26 @@ exports['Run in Local Node'] = function (test) {
     });
 };
 
+exports['Run in Local Node using Node Name'] = function (test) {
+    var node = mnode.createNode();
+    node.runInNode(node.name, function () {
+        test.ok(this);
+        test.equal(this, node);
+        test.done();
+    });
+};
+
+exports['Run in Connected Node'] = function (test) {
+    var node = mnode.createNode();
+    var node2 = mnode.createNode();
+    node2.connect(node);
+    node2.runInNode(node.name, function () {
+        test.ok(this);
+        test.equal(this, node);
+        test.done();
+    });
+};
+
 function Application(test, expected) {
     this.method = function (arg) {
         test.ok(arg);
