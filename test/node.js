@@ -99,14 +99,38 @@ exports['Run in Local Node using Node Name'] = function (test) {
     });
 };
 
-exports['Run in Connected Node'] = function (test) {
+exports['Run in Connected Local Node'] = function (test) {
     var node = mnode.createNode();
     var node2 = mnode.createNode();
     node2.connect(node);
-    node2.runInNode(node.name, function () {
+    node2.runInNode(node.name, function (msg) {
+        test.ok(msg);
+        test.equal(msg, 'foo');
         test.ok(this);
         test.equal(this, node);
         test.done();
+    }, ['foo']);
+};
+
+exports['Run in Connected Remote Node'] = function (test) {
+    test.expect(2);
+    
+    var node = mnode.createNode(3000);
+    node.start();
+    
+    node.done = function (msg) {
+        test.ok(msg);
+        test.equal(msg, 'foo');
+        node.stop();
+        node2.stop();
+        test.done();
+    };
+    
+    var node2 = mnode.createNode();
+    node2.connect(3000, function (msg) {
+        node2.runInNode(node.name, function (msg) {
+            this.done(msg);
+        }, ['foo']);
     });
 };
 
