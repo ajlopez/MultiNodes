@@ -92,6 +92,10 @@ Send a message to a node:
 ```js
 node.process(msg);
 ```
+Send a message to a remote/connected node:
+```js
+node.processInNode(nodename, msg);
+```
 Examples:
 ```js
 // Send a message to an application, to be processed as app.process(msg)
@@ -116,6 +120,28 @@ Stops a node:
 ```js
 node.stop();
 ```
+
+Run a function in a node (local or remote)
+```js
+node.runInNode(function (msg) {
+	// this points to node
+}, args); // args is an array 
+node.runInNode(nodename, function () {
+	// this points to selected node
+}, args);
+```
+
+Run a function in an application (local or remote)
+```js
+node.runInApplication(appname, function () {
+	// this points to application
+}, args);
+node.runInApplication(nodename, appname, function () {
+	// this points to selected application
+}, args);
+```
+Using this functions you can run code at remote nodes. See [Collatz Sample](https://github.com/ajlopez/MultiNodes/tree/master/samples/collatz):
+the server node code sends code to every new client node, to load and start application.
 
 ## Development
 
