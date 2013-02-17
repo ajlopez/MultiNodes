@@ -107,6 +107,14 @@ exports['Run in Local Node using Node Name'] = function (test) {
     });
 };
 
+exports['Run in Local Application using Node Name'] = function (test) {
+    var node = mnode.createNode();
+    node.registerApplication('myapplication', new Application(test, 'foo'));
+    node.runInApplication(node.name, 'myapplication', function (msg) {
+        this.method(msg);
+    }, ['foo']);
+};
+
 exports['Run in Connected Local Node'] = function (test) {
     var node = mnode.createNode();
     var node2 = mnode.createNode();
@@ -117,6 +125,16 @@ exports['Run in Connected Local Node'] = function (test) {
         test.ok(this);
         test.equal(this, node);
         test.done();
+    }, ['foo']);
+};
+
+exports['Run in Application in Connected Local Node'] = function (test) {
+    var node = mnode.createNode();
+    node.registerApplication('myapplication', new Application(test, 'foo'));
+    var node2 = mnode.createNode();
+    node2.connect(node);
+    node2.runInApplication(node.name, 'myapplication', function (msg) {
+        this.method(msg);
     }, ['foo']);
 };
 
