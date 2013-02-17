@@ -160,6 +160,30 @@ exports['Run in Connected Remote Node'] = function (test) {
     });
 };
 
+exports['Run in Application in Connected Remote Node'] = function (test) {
+    test.expect(2);
+
+    var node = mnode.createNode(3000);
+    var app = new Application(test, 'foo');
+
+    app.done = function () {
+        node.stop();
+        node2.stop();
+    };
+
+    node.registerApplication('myapplication', app);
+    node.start();
+
+    var node2 = mnode.createNode();
+
+    node2.connect(3000, function (msg) {
+        node2.runInApplication(node.name, 'myapplication', function (msg) {
+            this.method(msg);
+            this.done();
+        }, ['foo']);
+    });
+};
+
 function Application(test, expected) {
     this.method = function (arg) {
         test.ok(arg);
