@@ -90,6 +90,14 @@ exports['Run in Local Node'] = function (test) {
     });
 };
 
+exports['Run in Local Application'] = function (test) {
+    var node = mnode.createNode();
+    node.registerApplication('myapplication', new Application(test, 'foo'));
+    node.runInApplication('myapplication', function (msg) {
+        this.method(msg);
+    }, ['foo']);
+};
+
 exports['Run in Local Node using Node Name'] = function (test) {
     var node = mnode.createNode();
     node.runInNode(node.name, function () {
